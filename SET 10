@@ -1,0 +1,68 @@
+**1**
+# Function to generate Fibonacci sequence using recursion
+fibonacci <- function(n) {
+  if (n <= 1) {
+    return(n)
+  } else {
+    return(fibonacci(n-1) + fibonacci(n-2))
+  }
+}
+# Print Fibonacci sequence up to a specified number
+print(paste("Fibonacci sequence up to 10:", sapply(0:10, fibonacci)))
+
+# Find sum of natural numbers up to 10 using loop statement
+sum_natural <- 0
+for (i in 1:10) {
+  sum_natural <- sum_natural + i
+}
+print(paste("Sum of natural numbers up to 10:", sum_natural))
+
+**2**
+# Load Chick Weight dataset
+data("ChickWeight")
+# Explore the summary of the dataset
+summary_data <- summary(ChickWeight)
+print(summary_data)
+# Number of features and their types
+num_features <- ncol(ChickWeight)
+feature_types <- sapply(ChickWeight, class)
+# Number of records for each feature
+num_records <- sapply(ChickWeight, function(x) length(na.omit(x)))
+# Print number of features and their types
+print(paste("Number of Features:", num_features))
+print(paste("Feature Types:", feature_types))
+print(paste("Number of Records for Each Feature:", num_records))
+
+last_six_records <- tail(ChickWeight, 6)
+print(last_six_records)
+
+ordered_data <- ChickWeight[order(ChickWeight$Diet, ChickWeight$Weight), ]
+print(ordered_data)
+
+**3**
+# Load reshape2 package if not installed
+# install.packages("reshape2")
+library(reshape2)
+# Melting based on "Chick", "Time", "Diet" features as ID variables
+melted_data <- melt(ChickWeight, id.vars = c("Chick", "Time", "Diet"))
+print(melted_data)
+
+# Casting to display the mean value of weight grouped by Diet
+cast_data <- dcast(melted_data, Diet ~ variable, mean)
+print(cast_data)
+
+# Create a Histogram for "Weight" features belong to Diet-2 category
+hist(ChickWeight$Weight[ChickWeight$Diet == 2], main = "Histogram of Weight for Diet-2", xlab = "Weight", col = "lightblue")
+
+**4**
+# Multi regression model to find weight of the chicken by "Time" and "Diet"
+model <- lm(Weight ~ Time + Diet, data = ChickWeight)
+summary(model)
+
+predicted_weight <- predict(model, newdata = data.frame(Time = 10, Diet = 1))
+print(paste("Predicted weight for Time 10 and Diet-1:", predicted_weight))
+
+# Calculate the error in the model
+observed_weight <- ChickWeight$Weight[ChickWeight$Time == 10 & ChickWeight$Diet == 1]
+error <- observed_weight - predicted_weight
+print(paste("Error in the model:", error))
