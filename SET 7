@@ -1,0 +1,59 @@
+**1**
+# Create a random sample from LETTERS
+set.seed(123)  # For reproducibility
+random_letters <- sample(LETTERS, 20, replace = TRUE)
+
+# Convert to a factor with random levels
+factor_levels <- factor(random_letters)
+# Extract five levels
+five_levels <- levels(factor_levels)[1:5]
+print(five_levels)
+
+find_range <- function(vector) {
+  range_value <- max(vector) - min(vector)
+  return(range_value)
+}
+# Sample input
+C <- c(9, 8, 7, 6, 5, 4, 3, 2, 1)
+# Output
+range_output <- find_range(C)
+print(range_output)
+
+**2**
+# Create a 6 x 10 matrix of random integers in the range 1:10
+set.seed(456)  # For reproducibility
+random_matrix <- matrix(sample(1:10, 60, replace = TRUE), nrow = 6, ncol = 10)
+# Output
+print(random_matrix)
+
+entries_gt_4 <- apply(random_matrix, 1, function(row) sum(row > 4))
+print(entries_gt_4)
+
+rows_with_two_7 <- which(apply(random_matrix == 7, 1, sum) == 2)
+print(rows_with_two_7)
+
+**3**
+# Load Titanic dataset
+data("Titanic")
+
+# Bar chart
+barplot(rowSums(Titanic[, , ,"Yes"]), beside = TRUE, col = c("lightblue", "lightgreen", "lightpink"), legend = TRUE, names.arg = c("1st", "2nd", "3rd"))
+
+barplot(rowSums(Titanic[,,c("Yes"),]), beside=TRUE, col=c("lightblue", "lightgreen", "lightpink"), legend=TRUE, names.arg=c("1st","2nd","3rd"), beside = TRUE)
+
+# Assuming "Age" is a column in your dataset
+hist(dataset$Age, main = "Age Distribution", xlab = "Age", col = "lightblue")
+
+**4**
+# Creating a data frame
+df <- data.frame(Month = 1:12,
+                 Spends = c(1000, 4000, 5000, 4500, 3000, 4000, 9000, 11000, 15000, 12000, 7000, 3000),
+                 Sales = c(9914, 40487, 54324, 50044, 34719, 42551, 94871, 118914, 158484, 131348, 78504, 36284))
+print(df)
+
+# Regression model
+model <- lm(Sales ~ Spends, data = df)
+summary(model)
+
+predicted_sales <- predict(model, data.frame(Spends = 13500))
+print(predicted_sales)
