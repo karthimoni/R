@@ -1,0 +1,86 @@
+**1**
+a.# Create the air_quality dataframe (replace the values below with your actual data)
+air_quality <- data.frame(
+  Ozone = c(41, 36, 12, 18, 33),
+  Solar.R = c(190, 118, 149, 313, NA),
+  Wind = c(7.4, 8, 12.6, 11.5, 14.3),
+  Temp = c(67, 72, 74, 62, 56),
+  Month = c(5, 5, 5, 5, 6),
+  Day = c(1, 2, 3, 4, 1)
+)
+# Extract the first five rows
+first_five_rows <- head(air_quality, 5)
+print(first_five_rows)
+
+b.# Calculate mean temperature
+mean_temperature <- sum(air_quality$Temp) / length(air_quality$Temp)
+print(paste("Mean Temperature:", mean_temperature))
+
+c.# Find coldest day in May
+coldest_day_in_may <- air_quality[air_quality$Month == 5, ][which.min(air_quality[air_quality$Month == 5, ]$Temp), ]
+print("Coldest day in May:")
+print(coldest_day_in_may)
+
+**2**
+a.# Count days with wind speed greater than 17 mph
+days_greater_than_17 <- sum(air_quality$Wind > 17, na.rm = TRUE)
+print(paste("Days with wind speed greater than 17 mph:", days_greater_than_17))
+
+b.# Mean, Median, and Mode of wind speed
+mean_wind_speed <- mean(air_quality$Wind, na.rm = TRUE)
+median_wind_speed <- median(air_quality$Wind, na.rm = TRUE)
+mode_wind_speed <- as.numeric(names(sort(table(air_quality$Wind), decreasing = TRUE)[1]))
+print(paste("Mean Wind Speed:", mean_wind_speed))
+print(paste("Median Wind Speed:", median_wind_speed))
+print(paste("Mode Wind Speed:", mode_wind_speed))
+
+c.# Skewness of wind speed
+library(e1071)
+skewness_wind_speed <- skewness(air_quality$Wind, na.rm = TRUE)
+if (skewness_wind_speed > 0) {
+  print("The distribution of wind speed is positively skewed.")
+} else if (skewness_wind_speed < 0) {
+  print("The distribution of wind speed is negatively skewed.")
+} else {
+  print("The distribution of wind speed is approximately symmetric.")
+}
+
+**3**
+a.# Summary statistics
+summary_statistics <- summary(air_quality)
+print(summary_statistics)
+
+b.# Plot the distribution of air quality
+par(mfrow=c(2,2))  # Setting up a 2x2 grid for multiple plots
+hist(air_quality$Ozone, main="Ozone Distribution", xlab="Ozone", col="lightblue", border="black")
+hist(air_quality$Solar.R, main="Solar.R Distribution", xlab="Solar.R", col="lightgreen", border="black")
+hist(air_quality$Wind, main="Wind Distribution", xlab="Wind", col="lightcoral", border="black")
+hist(air_quality$Temp, main="Temperature Distribution", xlab="Temperature", col="lightpink", border="black")
+
+c.# Using cast function (assuming you have the reshape2 package installed)
+library(reshape2)
+average_per_month <- dcast(air_quality, Month ~ variable, mean)
+print(average_per_month)
+
+**4**
+a.# Identify missing values
+missing_values <- colSums(is.na(air_quality))
+total_rows <- nrow(air_quality)
+# Drop or replace missing values based on the threshold
+missing_threshold <- 0.1
+features_to_dropna <- names(missing_values[missing_values / total_rows < missing_threshold])
+features_to_replace <- names(missing_values[missing_values / total_rows >= missing_threshold])
+# Drop missing values for features less than 10%
+air_quality <- air_quality[complete.cases(air_quality[, features_to_dropna]), ]
+# Replace missing values with mean for features greater than or equal to 10%
+for (feature in features_to_replace) {
+  air_quality[is.na(air_quality[, feature]), feature] <- mean(air_quality[, feature], na.rm = TRUE)
+}
+
+b.# Fit linear regression model
+model <- lm(Ozone ~ Solar.R, data = air_quality)
+summary(model)
+
+c.# Scatter plot between Ozone and Solar with regression line
+plot(air_quality$Solar.R, air_quality$Ozone, main="Scatter plot between Ozone and Solar with Regression Line", xlab="Solar.R", ylab="Ozone")
+abline(model, col="red", lwd=2)
