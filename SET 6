@@ -1,0 +1,65 @@
+**1**
+fibonacci <- function(n) {
+  if (n <= 1) {
+    return(n)
+  } else {
+    return(fibonacci(n-1) + fibonacci(n-2))
+  }
+}
+# Example usage:
+n <- 10
+fib_sequence <- sapply(0:n, fibonacci)
+print(fib_sequence)
+
+sum_natural <- 0
+for (i in 1:10) {
+  sum_natural <- sum_natural + i
+}
+print(sum_natural)
+
+**2**
+values <- c(90, 50, 70, 80, 70, 60, 20, 30, 80, 90, 20)
+mean_val <- mean(values)
+median_val <- median(values)
+mode_val <- as.numeric(names(sort(table(values), decreasing = TRUE)[1]))
+print(paste("Mean:", mean_val))
+print(paste("Median:", median_val))
+print(paste("Mode:", mode_val))
+
+highest_values <- tail(sort(values), 2)
+lowest_values <- head(sort(values), 3)
+print(paste("2 Highest Values:", highest_values))
+print(paste("3 Lowest Values:", lowest_values))
+
+**3**
+# Install and load ggplot2 package if not installed
+# install.packages("ggplot2")
+library(ggplot2)
+# Load mtcars dataset
+data(mtcars)
+# a. Scatter plot of weight vs displacement factor by Engine Shape (vs)
+ggplot(mtcars, aes(x = wt, y = disp, color = factor(vs))) +
+  geom_point() +
+  labs(title = "Weight vs Displacement", x = "Weight", y = "Displacement", color = "Engine Shape")
+
+# b. Scatter plot of horsepower vs mileage factor by Engine Shape (vs)
+ggplot(mtcars, aes(x = hp, y = mpg, color = factor(vs))) +
+  geom_point() +
+  labs(title = "Horsepower vs Mileage", x = "Horsepower", y = "Mileage", color = "Engine Shape") +
+  facet_wrap(~cyl)
+
+**4**
+# Values of height and weight
+height <- c(151, 174, 138, 186, 128, 136, 179, 163, 152, 131)
+weight <- c(63, 81, 56, 91, 47, 57, 76, 72, 62, 48)
+
+# Linear regression model
+model <- lm(weight ~ height)
+
+# Predict weight for height 170
+predicted_weight <- predict(model, data.frame(height = 170))
+
+# Visualize regression graphically
+plot(height, weight, main = "Linear Regression: Height vs Weight", xlab = "Height", ylab = "Weight")
+abline(model, col = "red")
+points(170, predicted_weight, col = "blue", pch = 16)
