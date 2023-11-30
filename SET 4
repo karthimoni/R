@@ -1,0 +1,85 @@
+**1**
+# Load the ChickWeight dataset (if not already loaded)
+data(ChickWeight)
+# Summary of the dataset
+print("Summary of ChickWeight dataset:")
+str(ChickWeight)
+summary(ChickWeight)
+
+# Order the data frame
+ChickWeight_ordered <- ChickWeight[order(ChickWeight$diet, ChickWeight$weight), ]
+print("Ordered data frame:")
+print(ChickWeight_ordered)
+
+# Load necessary libraries (if not already loaded)
+library(ggplot2)
+library(stats)
+# Scatter plot
+ggplot(ChickWeight, aes(x = Time, y = weight, color = factor(diet))) +
+  geom_point() +
+  labs(title = "Scatter plot of weight vs Time grouped by diet",
+       x = "Time",
+       y = "Weight")
+# Histogram
+hist(ChickWeight$weight, main = "Histogram of Weight", xlab = "Weight")
+# Lag plot
+lag.plot(ChickWeight$weight, main = "Lag Plot of Weight")
+# Q-Q plot
+qqnorm(ChickWeight$weight)
+qqline(ChickWeight$weight)
+
+**2**
+# Load necessary libraries (if not already loaded)
+library(reshape2)
+# Melting function
+melted_data <- melt(ChickWeight, id.vars = c("Chick", "Time", "Diet"))
+print("Melted data:")
+print(melted_data)
+
+# Cast function for mean weight grouped by Diet
+mean_weight_by_diet <- dcast(melted_data, Diet ~ variable, mean)
+print("Mean weight grouped by Diet:")
+print(mean_weight_by_diet)
+
+# Load necessary libraries (if not already loaded)
+library(modeest)
+# Cast function for mode weight grouped by Diet
+mode_weight_by_diet <- dcast(melted_data, Diet ~ variable, modeest::mfv)
+print("Mode weight grouped by Diet:")
+print(mode_weight_by_diet)
+
+**3**
+# Box plot
+ggplot(ChickWeight, aes(x = factor(diet), y = weight, fill = factor(diet))) +
+  geom_boxplot() +
+  labs(title = "Box plot of weight grouped by diet",
+       x = "Diet",
+       y = "Weight")
+
+# Histogram for Diet-I
+hist(ChickWeight$weight[ChickWeight$diet == 1], main = "Histogram of Weight for Diet-I", xlab = "Weight")
+
+# Scatter plot for weight vs Time grouped by Diet
+ggplot(ChickWeight, aes(x = Time, y = weight, color = factor(diet))) +
+  geom_point() +
+  labs(title = "Scatter plot of weight vs Time grouped by diet",
+       x = "Time",
+       y = "Weight")
+
+**4**
+# Multi-regression model
+model <- lm(weight ~ Time + Diet, data = ChickWeight)
+summary(model)
+# New data for prediction
+new_data <- data.frame(Time = 10, Diet = 1)
+
+# Predicting weight
+predicted_weight <- predict(model, newdata = new_data)
+print(paste("Predicted Weight for Time-10 and Diet-1:", predicted_weight))
+
+# Actual weight for Time-10 and Diet-1
+actual_weight <- ChickWeight$weight[ChickWeight$Time == 10 & ChickWeight$Diet == 1]
+
+# Calculate error
+error <- actual_weight - predicted_weight
+print(paste("Error in the model for Time-10 and Diet-1:", error))
