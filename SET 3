@@ -1,0 +1,106 @@
+**1**
+a.# Load the mtcars dataset (if not already loaded)
+data(mtcars)
+# Dimension of the dataset
+print("Dimension of the dataset:")
+print(dim(mtcars))
+# Statistical summary of the features
+print("Statistical summary of the features:")
+print(summary(mtcars))
+
+b.# Largest and smallest value of "hp"
+max_hp <- max(mtcars$hp)
+min_hp <- min(mtcars$hp)
+print(paste("Largest value of hp:", max_hp))
+print(paste("Smallest value of hp:", min_hp))
+
+c.# Mean of mpg with respect to transmission model
+mean_mpg_by_am <- tapply(mtcars$mpg, mtcars$am, mean)
+print(paste("Mean of mpg with respect to transmission model (am):"))
+print(mean_mpg_by_am)
+
+**2**
+a.# Median of hp with respect to cyl
+median_hp_by_cyl <- tapply(mtcars$hp, mtcars$cyl, median)
+print(paste("Median of hp with respect to cylinder displacement (cyl):"))
+print(median_hp_by_cyl)
+
+b.# Mean, Median, and Mode of "hp"
+mean_hp <- mean(mtcars$hp)
+median_hp <- median(mtcars$hp)
+mode_hp <- as.numeric(names(sort(table(mtcars$hp), decreasing = TRUE)[1]))
+# Mean, Median, and Mode of "wt"
+mean_wt <- mean(mtcars$wt)
+median_wt <- median(mtcars$wt)
+mode_wt <- as.numeric(names(sort(table(mtcars$wt), decreasing = TRUE)[1]))
+print(paste("Mean of hp:", mean_hp))
+print(paste("Median of hp:", median_hp))
+print(paste("Mode of hp:", mode_hp))
+print(paste("Mean of wt:", mean_wt))
+print(paste("Median of wt:", median_wt))
+print(paste("Mode of wt:", mode_wt))
+
+c.# Skewness of "hp" and "wt"
+skewness_hp <- e1071::skewness(mtcars$hp)
+skewness_wt <- e1071::skewness(mtcars$wt)
+print(paste("Skewness of hp:", skewness_hp))
+print(paste("Skewness of wt:", skewness_wt))
+
+# Print comments
+if (skewness_hp > 0) {
+  print("Comment: The distribution of horsepower (hp) is positively skewed.")
+} else if (skewness_hp < 0) {
+  print("Comment: The distribution of horsepower (hp) is negatively skewed.")
+} else {
+  print("Comment: The distribution of horsepower (hp) is approximately symmetric.")
+}
+if (skewness_wt > 0) {
+  print("Comment: The distribution of weight (wt) is positively skewed.")
+} else if (skewness_wt < 0) {
+  print("Comment: The distribution of weight (wt) is negatively skewed.")
+} else {
+  print("Comment: The distribution of weight (wt) is approximately symmetric.")
+}
+
+**3**
+a.# Load necessary libraries (if not already loaded)
+library(ggplot2)
+# Scatter plot
+ggplot(mtcars, aes(x = hp, y = mpg, color = factor(am))) +
+  geom_point() +
+  labs(title = "Scatter plot of mpg vs hp grouped by transmission model",
+       x = "Horsepower (hp)",
+       y = "Mileage per gallon (mpg)")
+
+b.# Box plot
+ggplot(mtcars, aes(x = factor(am), y = mpg, fill = factor(am))) +
+  geom_boxplot() +
+  labs(title = "Box plot of mpg with respect to transmission model",
+       x = "Transmission model (am)",
+       y = "Mileage per gallon (mpg)")
+
+c.# Histogram plot
+ggplot(mtcars, aes(x = hp)) +
+  geom_histogram(binwidth = 10, fill = "lightblue", color = "black") +
+  labs(title = "Histogram of Horsepower (hp)",
+       x = "Horsepower (hp)",
+       y = "Frequency")
+
+**4**
+a.# Multiple regression model
+model <- lm(mpg ~ disp + hp + wt, data = mtcars)
+summary(model)
+
+b.# Scatter plot with regression lines
+ggplot(mtcars, aes(x = disp, y = mpg, color = factor(am))) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+  labs(title = "Multiple Regression Line Model",
+       x = "Displacement (disp)",
+       y = "Mileage per gallon (mpg)")
+
+c.# New data for prediction
+new_data <- data.frame(disp = 221, hp = 102, wt = 2.91)
+# Predicting mileage
+predicted_mpg <- predict(model, newdata = new_data)
+print(paste("Predicted Mileage (mpg):", predicted_mpg))
