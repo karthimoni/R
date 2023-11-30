@@ -1,0 +1,73 @@
+**1**
+# Assuming mat is your matrix
+mat <- matrix(1:16, nrow = 4)
+# Display lower diagonal matrix
+lower_diag <- lower.tri(mat)
+lower_matrix <- mat * lower_diag
+print(lower_matrix)
+# Display upper diagonal matrix
+upper_diag <- upper.tri(mat)
+upper_matrix <- mat * upper_diag
+print(upper_matrix)
+
+# Count number of 0's
+num_zeros <- sum(mat == 0)
+print(paste("Number of 0's in the matrix:", num_zeros))
+# Check if the matrix is sparse
+is_sparse <- sum(mat == 0) > (length(mat) / 2)
+print(paste("Is the matrix sparse?", is_sparse))
+
+# Assuming mat is your matrix
+mat[mat < 0] <- NA
+
+**2**
+values <- c(90, 50, 70, 80, 70, 60, 20, 30, 80, 90, 20, 75, 70, 10, 60, 70, 85, 95, 55, 15)
+# Mean
+mean_val <- mean(values)
+# Median
+median_val <- median(values)
+# Mode
+mode_val <- as.numeric(names(sort(table(values), decreasing = TRUE)[1]))
+print(paste("Mean:", mean_val))
+print(paste("Median:", median_val))
+print(paste("Mode:", mode_val))
+
+# 2 Highest values
+highest_values <- tail(sort(values), 2)
+# 4th Lowest value
+fourth_lowest_value <- sort(values)[4]
+print(paste("2 Highest Values:", highest_values))
+print(paste("4th Lowest Value:", fourth_lowest_value))
+
+**3**
+# Input vector
+city_values <- c(21, 62, 10, 53)
+# Labels for the chart
+city_labels <- c("London", "New York", "Singapore", "Mumbai")
+# Create pie chart
+pie(city_values, labels = city_labels, main = "City Pie-Chart", col = rainbow(length(city_values)))
+legend("topright", city_labels, cex = 0.8, fill = rainbow(length(city_values)))
+
+# Input vectors
+H <- c(7, 12, 28, 3, 41)
+M <- c("mar", "apr", "may", "jun", "jul")
+# Create bar chart
+barplot(H, names.arg = M, main = "Revenue Chart", xlab = "Month", ylab = "Revenue", col = "blue")
+
+# Input vector
+v <- c(19, 23, 11, 5, 16, 21, 32, 14, 19, 27, 39, 120, 40, 70, 90)
+# Create histogram
+hist(v, main = "Histogram", xlab = "Values", ylab = "Frequency", col = "lightblue", breaks = 10)
+
+**4**
+df <- data.frame(Month = 1:12,
+                 Spends = c(1000, 4000, 5000, 4500, 3000, 4000, 9000, 11000, 15000, 12000, 7000, 3000),
+                 Sales = c(9914, 40487, 54324, 50044, 34719, 42551, 94871, 118914, 158484, 131348, 78504, 36284))
+print(df)
+
+# Assuming df is your data frame
+model <- lm(Sales ~ Spends, data = df)
+summary(model)
+
+predicted_sales <- predict(model, newdata = data.frame(Spends = 13500))
+print(paste("Predicted Sales for Rs 13,500 expenditure:", predicted_sales))
