@@ -1,0 +1,90 @@
+**1**
+# Commute times data
+commute_times <- c(17, 16, 20, 24, 22, 15, 21, 15, 17, 22)
+# Function to find the longest commute time
+maxi <- function(times) {
+  max_time <- max(times)
+  return(max_time)
+}
+# Function to find the average commute time
+avger <- function(times) {
+  avg_time <- mean(times)
+  return(avg_time)
+}
+# Function to find the minimum commute time
+mini <- function(times) {
+  min_time <- min(times)
+  return(min_time)
+}
+# Results
+print(paste("Longest commute time:", maxi(commute_times)))
+print(paste("Average commute time:", avger(commute_times)))
+print(paste("Minimum commute time:", mini(commute_times)))
+
+# Fixing the mistake
+commute_times[which.max(commute_times)] <- 18
+# Finding the new average
+new_avg <- avger(commute_times)
+print(paste("New average commute time:", new_avg))
+
+commute_20_or_more <- sum(commute_times >= 20)
+print(paste("Number of times with a commute of 20 minutes or more:", commute_20_or_more))
+
+**2**
+# Load iris dataset
+data("iris")
+# Find dimension, structure, summary statistics, and standard deviation
+iris_dim <- dim(iris)
+iris_structure <- str(iris)
+iris_summary <- summary(iris)
+iris_std_dev <- sapply(iris[, 1:4], sd)
+# Print results
+print(paste("Dimension of iris dataset:", iris_dim))
+print("Structure of iris dataset:")
+print(iris_structure)
+print("Summary statistics of iris dataset:")
+print(iris_summary)
+print("Standard deviation of features:")
+print(iris_std_dev)
+
+# Mean and standard deviation grouped by species
+mean_std_by_species <- aggregate(. ~ Species, data = iris, function(x) c(mean = mean(x), sd = sd(x)))
+print(mean_std_by_species)
+
+# Quantile values of sepal width and length
+quantiles_sepal <- quantile(iris$Sepal.Length)
+quantiles_sepal_width <- quantile(iris$Sepal.Width)
+print("Quantile values of Sepal Length:")
+print(quantiles_sepal)
+print("Quantile values of Sepal Width:")
+print(quantiles_sepal_width)
+
+**3**
+# Box plot for Sepals length grouped by Species
+boxplot(Sepal.Length ~ Species, data = iris, main = "Sepal Length by Species", xlab = "Species", ylab = "Sepal Length")
+
+# Scatter plot for petals length vs width grouped by Species
+plot(iris$Petal.Length, iris$Petal.Width, col = iris$Species, pch = 16, main = "Petal Length vs Width by Species", xlab = "Petal Length", ylab = "Petal Width")
+legend("topright", legend = levels(iris$Species), col = 1:3, pch = 16)
+
+# Correlation matrix
+cor_matrix <- cor(iris[, 1:4])
+print(cor_matrix)
+
+**4**
+# Set seed for reproducibility
+set.seed(789)
+# Randomly sample 80% for training
+train_indices <- sample(1:nrow(iris), 0.8 * nrow(iris))
+train_data <- iris[train_indices, ]
+test_data <- iris[-train_indices, ]
+# Create logistic regression model
+log_reg_model <- glm(Species ~ Petal.Width + Petal.Length, data = train_data, family = "binomial")
+
+# B. Predict the probability using test data
+probabilities <- predict(log_reg_model, newdata = test_data, type = "response")
+
+# C. Create confusion matrix
+predicted_species <- ifelse(probabilities > 0.5, "versicolor", "setosa")
+conf_matrix <- table(predicted_species, test_data$Species)
+print(conf_matrix)
