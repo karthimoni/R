@@ -1,0 +1,81 @@
+**1**
+# Load the necessary libraries
+library(dplyr)
+library(ggplot2)
+library(MASS)
+# Assuming you have the iris dataset loaded
+data(iris)
+iris_data <- iris
+
+# Part a: Extract last 6 observations of the dataset
+last_six_observations <- tail(iris_data, 6)
+print("Last 6 Observations:")
+print(last_six_observations)
+
+# Part b: Find dimension, structure, summary statistics, standard deviation of all features
+print("Dimensions:")
+print(dim(iris_data))
+print("\nStructure:")
+print(str(iris_data))
+print("\nSummary Statistics:")
+print(summary(iris_data))
+print("\nStandard Deviation:")
+print(sd(iris_data))
+
+# Part c: Mean and standard deviation of features grouped by three species of Iris flowers
+grouped_species <- group_by(iris_data, Species)
+print("\nMean by Species:")
+print(summarise_all(grouped_species, mean))
+print("\nStandard Deviation by Species:")
+print(summarise_all(grouped_species, sd))
+
+**2**
+A.quantiles_sepal <- quantile(iris$Sepal.Length)
+quantiles_sepal_width <- quantile(iris$Sepal.Width)
+print("Quantile values of Sepal Length:")
+print(quantiles_sepal)
+print("Quantile values of Sepal Width:")
+print(quantiles_sepal_width)B. Create a new data frame named irisl with a new column named Sepal.Length Cate:# Create new data frame with a categorized column
+irisl <- iris
+irisl$Sepal.Length.Cate <- cut(iris$Sepal.Length, breaks = quantiles_sepal, labels = FALSE)
+
+b.# Print the new data frame
+print(head(irisl))C. Average value of numerical variables by two categorical variables: Species and Sepal.Length.Cate:# Calculate average by two categorical variables
+
+c.avg_by_categories <- aggregate(. ~ Species + Sepal.Length.Cate, data = irisl, mean)
+print(avg_by_categories)
+**3**
+# Part 8: Scatter plot between sepals width and length grouped by Species
+ggplot(iris_data, aes(x = Sepal.Width, y = Sepal.Length, color = Species)) +
+  geom_point() +
+  ggtitle("Scatter Plot: Sepals Width vs Length by Species")
+
+# Part 9: Scatter plot between petals width and length grouped by Species
+ggplot(iris_data, aes(x = Petal.Width, y = Petal.Length, color = Species)) +
+  geom_point() +
+  ggtitle("Scatter Plot: Petals Width vs Length by Species")
+
+# Part 10: Box plot for Sepals length grouped by Species
+ggplot(iris_data, aes(x = Species, y = Sepal.Length, fill = Species)) +
+  geom_boxplot() +
+  ggtitle("Box Plot: Sepals Length by Species")
+
+**4**
+# Part 11: Randomly sample the iris dataset, create Logistic Regression, and evaluate the model
+set.seed(42)
+sampled_data <- iris_data[sample(nrow(iris_data), nrow(iris_data)*0.5), ]
+train_data <- sampled_data
+test_data <- anti_join(iris_data, train_data)
+
+# Create Logistic Regression model
+model <- glm(Species ~ Petal.Width + Petal.Length, data = train_data, family = "binomial")
+
+# Predict the probability
+probabilities <- predict(model, newdata = test_data, type = "response")
+
+# Create Confusion matrix
+threshold <- 0.5
+predictions <- ifelse(probabilities > threshold, "virginica", "non-virginica")
+conf_matrix <- table(test_data$Species, predictions)
+print("\nConfusion Matrix:")
+print(conf_matrix)
