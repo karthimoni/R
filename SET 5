@@ -1,0 +1,82 @@
+# 1. Create dataset with 10 inputs and Explore the summary of the dataset
+set.seed(123)  # Setting seed for reproducibility
+
+# Create dataset
+state_names <- c("State1", "State2", "State3", "State4", "State5", "State6", "State7", "State8", "State9", "State10")
+murder <- runif(10, 1, 10)
+assault <- runif(10, 50, 200)
+rape <- runif(10, 5, 30)
+urban_pop <- runif(10, 40, 80)
+
+# Combine data into a data frame
+arrests_data <- data.frame(State = state_names, Murder = murder, Assault = assault, Rape = rape, UrbanPop = urban_pop)
+
+# A. Explore the summary of Data set
+print("Summary of the dataset:")
+print(summary(arrests_data))
+
+# B. State with the largest total number of rape
+max_rape_state <- arrests_data$State[which.max(arrests_data$Rape)]
+cat("State with the largest total number of rape:", max_rape_state, "\n")
+
+# C. States with max & min crime rates for murder
+max_murder_state <- arrests_data$State[which.max(arrests_data$Murder)]
+min_murder_state <- arrests_data$State[which.min(arrests_data$Murder)]
+cat("State with the max crime rate for murder:", max_murder_state, "\n")
+cat("State with the min crime rate for murder:", min_murder_state, "\n")
+
+
+# 2. Find the correlation among features
+# A. Find the correlation among features
+correlation_matrix <- cor(arrests_data[, c("Murder", "Assault", "Rape", "UrbanPop")])
+print("Correlation Matrix:")
+print(correlation_matrix)
+
+# B. Print the states which have assault arrests more than median of the country
+median_assault <- median(arrests_data$Assault)
+high_assault_states <- arrests_data$State[arrests_data$Assault > median_assault]
+cat("States with assault arrests more than the median:", high_assault_states, "\n")
+
+# C. Print the states in the bottom 25% of murder
+bottom_25_murder_states <- arrests_data$State[order(arrests_data$Murder)[1:floor(0.25 * nrow(arrests_data))]]
+cat("States in the bottom 25% of murder:", bottom_25_murder_states, "\n")
+
+
+# 3. Visualization
+# A. Create a histogram and density plot of murder arrests
+hist(arrests_data$Murder, main="Histogram of Murder Arrests", xlab="Murder Arrests", col="lightblue", border="black")
+rug(arrests_data$Murder, col="brown")
+
+# B. Create the plot that shows the relationship between murder arrest rate and proportion of the population that is urbanised by state.
+# Enrich the chart by adding assault arrest rates (by colouring the points from blue (low) to red (high))
+library(ggplot2)
+ggplot(arrests_data, aes(x = UrbanPop, y = Murder, color = Assault)) +
+  geom_point() +
+  scale_color_gradient(low = "blue", high = "red") +
+  labs(title = "Relationship between Murder Arrest Rate and Urban Population with Assault Arrest Rates",
+       x = "Urban Population",
+       y = "Murder Arrest Rate")
+
+# C. Draw a bar graph to show the murder rate for each of the 10 states
+ggplot(arrests_data, aes(x = State, y = Murder, fill = Murder)) +
+  geom_bar(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Murder Rates by 10 States",
+       x = "State",
+       y = "Murder Rate")
+
+# 4. Using linear regression analysis
+# Input data
+height <- c(151, 174, 138, 186, 128, 136, 179, 163, 152, 131)
+weight <- c(63, 81, 56, 91, 47, 57, 76, 72, 62, 48)
+
+# Fit the model
+model <- lm(weight ~ height)
+
+# Predict the weight for height 170
+predicted_weight <- predict(model, data.frame(height = 170))
+cat("Predicted weight for height 170:", predicted_weight, "\n")
+
+# Visualization
+plot(height, weight, col="blue", pch=19, main="Linear Regression: Height vs Weight", xlab="Height", ylab="Weight")
+abline(model, col="red", lwd=2)
